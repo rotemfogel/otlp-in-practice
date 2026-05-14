@@ -1,0 +1,42 @@
+# Node modules (will be installed during build)
+node_modules/
+
+# Build outputs
+dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+docs/
+
+# Tests
+tests/
+*.test.ts
+*.spec.ts
+jest.config.ts
+coverage/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Docker
+.dockerignore
+docker-compose.yml
+
+# Other
+.DS_Store
+*.log
+.env
+.env.*

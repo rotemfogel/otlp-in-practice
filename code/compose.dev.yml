@@ -1,0 +1,37 @@
+# Development override for hot-reloading
+# Usage: docker compose -f compose.yml -f compose.dev.yml up
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+      target: development
+    volumes:
+      # Mount source code for hot reload
+      - ./frontend/src:/app/src:ro
+      - ./frontend/tsconfig.json:/app/tsconfig.json:ro
+      # Preserve node_modules (don't mount from host)
+      - frontend-node-modules:/app/node_modules
+    environment:
+      - NODE_ENV=development
+      - LOG_LEVEL=debug
+    command: npm run dev
+
+  worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile.dev
+    volumes:
+      # Mount source code for hot reload
+      - ./worker/src:/app/src:ro
+      # Preserve translation models (large, slow to download)
+      - worker-models:/root/.local/share/argos-translate
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=debug
+    command: watchmedo auto-restart --directory=./src --pattern="*.py" --recursive -- python -m src.main
+
+volumes:
+  frontend-node-modules:
+  worker-models:

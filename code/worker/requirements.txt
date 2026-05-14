@@ -1,0 +1,13 @@
+certifi==2026.1.4
+charset-normalizer==3.4.4
+click==8.3.1
+idna==3.11
+# Editable install with no version control (lm-labs==0.1.0)
+-e /Users/lauromueller/Documents/courses/_labs/lm_labs
+markdown-it-py==4.0.0
+mdurl==0.1.2
+Pygments==2.19.2
+PyYAML==6.0.3
+requests==2.32.5
+rich==14.3.2
+urllib3==2.6.3

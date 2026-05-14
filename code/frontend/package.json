@@ -1,0 +1,49 @@
+{
+  "name": "translation-frontend",
+  "version": "1.0.0",
+  "description": "Translation queue frontend service",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "jest --maxWorkers=1",
+    "test:watch": "jest --watch --maxWorkers=1",
+    "test:coverage": "jest --coverage --maxWorkers=1"
+  },
+  "keywords": [
+    "translation",
+    "queue",
+    "express",
+    "opentelemetry"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@opentelemetry/api": "^1.9.1",
+    "@opentelemetry/auto-instrumentations-node": "0.75.0",
+    "@opentelemetry/exporter-logs-otlp-http": "0.218.0",
+    "@opentelemetry/exporter-metrics-otlp-http": "0.218.0",
+    "@opentelemetry/exporter-trace-otlp-http": "0.218.0",
+    "@opentelemetry/instrumentation-winston": "0.61.0",
+    "@opentelemetry/sdk-logs": "0.218.0",
+    "@opentelemetry/sdk-node": "0.218.0",
+    "@opentelemetry/winston-transport": "0.27.0",
+    "cors": "2.8.6",
+    "express": "5.2.1",
+    "ioredis": "5.10.1",
+    "uuid": "14.0.0",
+    "winston": "3.19.0"
+  },
+  "devDependencies": {
+    "@types/cors": "2.8.19",
+    "@types/express": "5.0.6",
+    "@types/jest": "30.0.0",
+    "@types/supertest": "7.2.0",
+    "jest": "30.4.2",
+    "supertest": "7.2.2",
+    "ts-jest": "29.4.9",
+    "tsx": "4.21.0",
+    "typescript": "6.0.3"
+  }
+}

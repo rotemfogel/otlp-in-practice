@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.venv/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+docs/
+
+# Tests (we don't need these in the image)
+tests/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Docker
+.dockerignore
+docker-compose.yml
+
+# Other
+.DS_Store
+*.log
+.env
+.env.*

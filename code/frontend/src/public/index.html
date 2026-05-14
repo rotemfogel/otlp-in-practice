@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Translation Queue</title>
+    <link
+      rel="stylesheet"
+      href="style.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🌍 <span class="gradient-text">Translation Queue</span></h1>
+        <p class="subtitle">Async multi-language translation service</p>
+      </header>
+
+      <main>
+        <section class="input-section">
+          <form id="translationForm">
+            <div class="form-group">
+              <label for="sourceText">Text to translate (English):</label>
+              <textarea
+                id="sourceText"
+                name="text"
+                rows="5"
+                placeholder="Enter text to translate..."
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Target languages:</label>
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input
+                    type="checkbox"
+                    name="targetLanguages"
+                    value="es"
+                  />
+                  <span>Spanish (es)</span>
+                </label>
+                <label class="checkbox-label">
+                  <input
+                    type="checkbox"
+                    name="targetLanguages"
+                    value="fr"
+                  />
+                  <span>French (fr)</span>
+                </label>
+                <label class="checkbox-label">
+                  <input
+                    type="checkbox"
+                    name="targetLanguages"
+                    value="de"
+                  />
+                  <span>German (de)</span>
+                </label>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              id="submitBtn"
+              class="submit-btn"
+            >
+              Translate
+            </button>
+          </form>
+
+          <div
+            id="error"
+            class="error-message"
+            style="display: none"
+          ></div>
+        </section>
+
+        <section
+          class="results-section"
+          id="resultsSection"
+          style="display: none"
+        >
+          <div class="results-header">
+            <h2>Translation Results</h2>
+            <div class="history-controls">
+              <button
+                id="prevBtn"
+                class="history-btn"
+                title="Previous session"
+                disabled
+              >
+                ← Previous
+              </button>
+              <span
+                id="historyPosition"
+                class="history-position"
+              ></span>
+              <button
+                id="nextBtn"
+                class="history-btn"
+                title="Next session"
+                disabled
+              >
+                Next →
+              </button>
+              <button
+                id="historyToggle"
+                class="history-btn history-toggle"
+                title="Show history"
+              >
+                📋 History
+              </button>
+            </div>
+          </div>
+
+          <div
+            id="historyPanel"
+            class="history-panel"
+            style="display: none"
+          >
+            <h3>Recent Sessions</h3>
+            <div
+              id="historyList"
+              class="history-list"
+            ></div>
+          </div>
+
+          <div
+            id="sessionInfo"
+            class="session-info"
+          ></div>
+          <div
+            id="resultsGrid"
+            class="results-grid"
+          ></div>
+        </section>
+      </main>
+
+      <footer>
+        <p>OpenTelemetry Demo Application</p>
+      </footer>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

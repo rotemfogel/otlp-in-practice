@@ -1,0 +1,23 @@
+# Development Dockerfile with hot-reload support
+FROM node:24.13.1-alpine AS development
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install ALL dependencies (including devDependencies for tsx)
+RUN npm ci
+
+# Copy tsconfig for TypeScript compilation
+COPY tsconfig.json ./
+
+# Source code will be mounted as volume
+# Public assets copied for serving
+COPY src/public ./src/public
+
+# Expose port
+EXPOSE 3000
+
+# Default command (can be overridden in compose)
+CMD ["npm", "run", "dev"]
