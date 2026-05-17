@@ -7,12 +7,12 @@ from datetime import datetime, timezone
 from opentelemetry import trace, propagate
 from opentelemetry.trace import SpanKind, StatusCode
 from typing import Optional
-from config import Config
-from logger import setup_logging
-from queue_consumer import QueueConsumer
-from translator import Translator
-from instrumentation import setup_instrumentation
-from metrics import jobs_total, translation_duration, active_jobs
+from .config import Config
+from .logger import setup_logging
+from .consumer_queue import ConsumerQueue
+from .translator import Translator
+from .instrumentation import setup_instrumentation
+from .metrics import jobs_total, translation_duration, active_jobs
 
 logger = logging.getLogger(__name__)
 tracer = trace.get_tracer(__name__)
@@ -53,12 +53,12 @@ def main() -> None:
     logger.info("Supported languages", extra={"languages": config.supported_languages})
 
     # Initialize components
-    queue_consumer: Optional[QueueConsumer] = None
+    queue_consumer: Optional[ConsumerQueue] = None
     translator: Optional[Translator] = None
 
     try:
         # Connect to Redis
-        queue_consumer = QueueConsumer(
+        queue_consumer = ConsumerQueue(
             host=config.redis_host,
             port=config.redis_port,
             queue_key=config.queue_key,

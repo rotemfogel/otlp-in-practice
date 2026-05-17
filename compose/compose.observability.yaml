@@ -1,3 +1,6 @@
+#include:
+#  - compose.infra.yaml
+
 services:
   prometheus:
     image: prom/prometheus
@@ -14,6 +17,7 @@ services:
     networks:
       - observability
     restart: unless-stopped
+
   loki:
     image: grafana/loki
     container_name: loki
@@ -30,6 +34,27 @@ services:
     networks:
       - observability
     restart: unless-stopped
+
+#  jaeger:
+#    image: jaegertracing/all-in-one
+#    container_name: jaeger
+#    command:
+#      - "--memory.max-traces"
+#      - "10000"
+#      - "--query.base-path"
+#      - "/jaeger/ui"
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 300M
+#    restart: unless-stopped
+#    ports:
+#      - "16686:16686"                    # Jaeger UI
+#      - "4317"                           # OTLP gRPC default port
+#    environment:
+#      - COLLECTOR_OTLP_ENABLED=true
+#      - METRICS_STORAGE_TYPE=prometheus
+
   tempo:
     image: grafana/tempo:2.10.1
     container_name: tempo
@@ -44,6 +69,7 @@ services:
     networks:
       - observability
     restart: unless-stopped
+
   grafana:
     image: grafana/grafana
     container_name: grafana
@@ -63,8 +89,9 @@ services:
       - prometheus
       - loki
       - tempo
+
   otel-collector:
-    image: otel/opentelemetry-collector-contrib:0.146.1
+    image: otel/opentelemetry-collector-contrib:0.152.0
     container_name: otel-collector
     command: ["--config=/etc/otel-collector-config.yaml"]
     volumes:
@@ -82,7 +109,9 @@ services:
       - prometheus
       - loki
       - tempo
- 
+#      - jaeger
+#      - kafka
+
 volumes:
   prometheus-data:
   loki-data:

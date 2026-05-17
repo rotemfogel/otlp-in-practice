@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuid4 } from 'uuid';
 import { SpanStatusCode } from '@opentelemetry/api';
 import type { Request, Response } from 'express';
 import type { QueueService } from '../services/queue';
@@ -173,7 +173,7 @@ export function createTranslationRouter(deps: TranslationRouterDeps): Router {
           }
 
           // Create session
-          const sessionId = uuidv4();
+          const sessionId = uuid4();
           sessionSpan.setAttribute('translation.session_id', sessionId);
 
           logger.info('Translation session created', {
@@ -200,7 +200,7 @@ export function createTranslationRouter(deps: TranslationRouterDeps): Router {
                 );
 
                 for (const targetLanguage of targetLanguages) {
-                  const jobId = uuidv4();
+                  const jobId = uuid4();
                   const job: TranslationJob = {
                     jobId,
                     sessionId,

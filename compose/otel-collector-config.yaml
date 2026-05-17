@@ -15,8 +15,12 @@ processors:
     limit_mib: 512
 
 exporters:
-  otlp/tempo:
-    endpoint: tempo:4317
+  #  otlp/tempo:
+  #    endpoint: tempo:4317
+  #    tls:
+  #      insecure: true
+  otlp/jaeger:
+    endpoint: jaeger:4317
     tls:
       insecure: true
   prometheus:
@@ -25,6 +29,21 @@ exporters:
     endpoint: http://loki:3100/otlp
     tls:
       insecure: true
+#  kafka-logs:
+#    brokers:
+#      - kafka:9092
+#    # Kafka topic for logs
+#    topic: logs
+#  kafka-metrics:
+#    brokers:
+#      - kafka:9092
+#    # Kafka topic for metrics
+#    topic: metrics
+#  kafka-spans:
+#    brokers:
+#      - kafka:9092
+#    # Kafka topic for spans
+#    topic: spans
 
 service:
   telemetry:
@@ -37,14 +56,17 @@ service:
                 port: 8888
   pipelines:
     traces:
-      receivers: [otlp]
-      processors: [memory_limiter, batch]
-      exporters: [otlp/tempo]
+      receivers: [ otlp ]
+      processors: [ memory_limiter, batch ]
+      exporters: [ otlp/jaeger ]
+    #      exporters: [otlp/tempo, kafka-spans]
     metrics:
-      receivers: [otlp]
-      processors: [memory_limiter, batch]
-      exporters: [prometheus]
+      receivers: [ otlp ]
+      processors: [ memory_limiter, batch ]
+      exporters: [ prometheus ]
+    #      exporters: [prometheus, kafka-metrics]
     logs:
-      receivers: [otlp]
-      processors: [memory_limiter, batch]
-      exporters: [otlphttp/loki]
+      receivers: [ otlp ]
+      processors: [ memory_limiter, batch ]
+      exporters: [ otlphttp/loki ]
+#      exporters: [otlphttp/loki, kafka-logs]

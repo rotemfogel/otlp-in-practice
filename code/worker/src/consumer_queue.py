@@ -6,7 +6,7 @@ from typing import Optional, Dict, Any
 logger = logging.getLogger(__name__)
 
 
-class QueueConsumer:
+class ConsumerQueue:
     """Redis queue consumer for translation jobs."""
 
     def __init__(self, host: str, port: int, queue_key: str, result_channel: str):
