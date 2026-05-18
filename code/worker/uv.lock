@@ -2246,19 +2246,16 @@ dependencies = [
 
 [package.optional-dependencies]
 dev = [
+    { name = "black" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
 ]
 
-[package.dev-dependencies]
-dev = [
-    { name = "black" },
-]
-
 [package.metadata]
 requires-dist = [
     { name = "argostranslate", specifier = "==1.11.0" },
+    { name = "black", marker = "extra == 'dev'", specifier = ">=26.5.0" },
     { name = "opentelemetry-api", specifier = "==1.41.1" },
     { name = "opentelemetry-exporter-otlp-proto-http", specifier = "==1.41.1" },
     { name = "opentelemetry-instrumentation", specifier = "==0.62b1" },
@@ -2272,9 +2269,6 @@ requires-dist = [
     { name = "redis", specifier = "==7.2.0" },
 ]
 provides-extras = ["dev"]
-
-[package.metadata.requires-dev]
-dev = [{ name = "black", specifier = ">=26.5.0" }]
 
 [[package]]
 name = "triton"
