@@ -6,7 +6,8 @@ All notable changes to the Translation Queue application for OpenTelemetry instr
 
 ### Description
 
-Baseline application without OpenTelemetry instrumentation. This is the starting point for the OpenTelemetry course labs.
+Baseline application without OpenTelemetry instrumentation. This is the starting point for the OpenTelemetry course
+labs.
 
 ### Features
 

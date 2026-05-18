@@ -1,9 +1,9 @@
 // Constants
 const MAX_HISTORY_ITEMS = 20;
 const LANGUAGE_NAMES = {
-  es: 'Spanish',
-  fr: 'French',
-  de: 'German',
+    es: 'Spanish',
+    fr: 'French',
+    de: 'German',
 };
 
 // State
@@ -14,141 +14,141 @@ let currentHistoryIndex = -1;
 
 // Helpers
 function getCurrentHistoryItem() {
-  return currentHistoryIndex >= 0 && currentHistoryIndex < sessionHistory.length
-    ? sessionHistory[currentHistoryIndex]
-    : null;
+    return currentHistoryIndex >= 0 && currentHistoryIndex < sessionHistory.length
+        ? sessionHistory[currentHistoryIndex]
+        : null;
 }
 
 function closeHistoryPanel() {
-  historyPanel.style.display = 'none';
-  historyToggle.textContent = '📋 History';
+    historyPanel.style.display = 'none';
+    historyToggle.textContent = '📋 History';
 }
 
 // Load history from localStorage on startup
 function loadHistory() {
-  const saved = localStorage.getItem('translationHistory');
-  if (saved) {
-    try {
-      sessionHistory = JSON.parse(saved);
-    } catch (e) {
-      console.error('Failed to load history:', e);
-      sessionHistory = [];
+    const saved = localStorage.getItem('translationHistory');
+    if (saved) {
+        try {
+            sessionHistory = JSON.parse(saved);
+        } catch (e) {
+            console.error('Failed to load history:', e);
+            sessionHistory = [];
+        }
     }
-  }
 }
 
 // Save history to localStorage
 function saveHistory() {
-  try {
-    const historyToSave = sessionHistory.slice(-MAX_HISTORY_ITEMS);
-    localStorage.setItem('translationHistory', JSON.stringify(historyToSave));
-  } catch (e) {
-    console.error('Failed to save history:', e);
-  }
+    try {
+        const historyToSave = sessionHistory.slice(-MAX_HISTORY_ITEMS);
+        localStorage.setItem('translationHistory', JSON.stringify(historyToSave));
+    } catch (e) {
+        console.error('Failed to save history:', e);
+    }
 }
 
 // Add session to history
 function addToHistory(session, originalText) {
-  // Remove any items after current position (when navigating back then creating new)
-  if (currentHistoryIndex < sessionHistory.length - 1) {
-    sessionHistory = sessionHistory.slice(0, currentHistoryIndex + 1);
-  }
+    // Remove any items after current position (when navigating back then creating new)
+    if (currentHistoryIndex < sessionHistory.length - 1) {
+        sessionHistory = sessionHistory.slice(0, currentHistoryIndex + 1);
+    }
 
-  const historyItem = {
-    session,
-    originalText,
-    timestamp: Date.now(),
-  };
+    const historyItem = {
+        session,
+        originalText,
+        timestamp: Date.now(),
+    };
 
-  sessionHistory.push(historyItem);
-  currentHistoryIndex = sessionHistory.length - 1;
-  saveHistory();
-  updateHistoryUI();
+    sessionHistory.push(historyItem);
+    currentHistoryIndex = sessionHistory.length - 1;
+    saveHistory();
+    updateHistoryUI();
 }
 
 // Navigate history
 function navigateHistory(direction) {
-  const newIndex = currentHistoryIndex + direction;
+    const newIndex = currentHistoryIndex + direction;
 
-  if (newIndex >= 0 && newIndex < sessionHistory.length) {
-    currentHistoryIndex = newIndex;
-    const historyItem = sessionHistory[currentHistoryIndex];
+    if (newIndex >= 0 && newIndex < sessionHistory.length) {
+        currentHistoryIndex = newIndex;
+        const historyItem = sessionHistory[currentHistoryIndex];
 
-    // Disconnect from SSE (we're viewing history, not live)
-    if (eventSource) {
-      eventSource.close();
-      eventSource = null;
+        // Disconnect from SSE (we're viewing history, not live)
+        if (eventSource) {
+            eventSource.close();
+            eventSource = null;
+        }
+
+        closeHistoryPanel();
+        showResults(historyItem.session, historyItem.originalText);
+        updateHistoryUI();
+        resultsSection.scrollIntoView({behavior: 'smooth'});
     }
-
-    closeHistoryPanel();
-    showResults(historyItem.session, historyItem.originalText);
-    updateHistoryUI();
-    resultsSection.scrollIntoView({ behavior: 'smooth' });
-  }
 }
 
 // Update history UI controls
 function updateHistoryUI() {
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
-  const historyPosition = document.getElementById('historyPosition');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const historyPosition = document.getElementById('historyPosition');
 
-  prevBtn.disabled = currentHistoryIndex <= 0;
-  nextBtn.disabled = currentHistoryIndex >= sessionHistory.length - 1;
+    prevBtn.disabled = currentHistoryIndex <= 0;
+    nextBtn.disabled = currentHistoryIndex >= sessionHistory.length - 1;
 
-  if (sessionHistory.length > 0) {
-    historyPosition.textContent = `${currentHistoryIndex + 1} of ${sessionHistory.length}`;
-  } else {
-    historyPosition.textContent = '';
-  }
+    if (sessionHistory.length > 0) {
+        historyPosition.textContent = `${currentHistoryIndex + 1} of ${sessionHistory.length}`;
+    } else {
+        historyPosition.textContent = '';
+    }
 
-  renderHistoryList();
+    renderHistoryList();
 }
 
 // Render history list
 function renderHistoryList() {
-  const historyList = document.getElementById('historyList');
+    const historyList = document.getElementById('historyList');
 
-  if (sessionHistory.length === 0) {
-    historyList.innerHTML =
-      '<p style="color: var(--text-muted); text-align: center;">No history yet</p>';
-    return;
-  }
+    if (sessionHistory.length === 0) {
+        historyList.innerHTML =
+            '<p style="color: var(--text-muted); text-align: center;">No history yet</p>';
+        return;
+    }
 
-  historyList.innerHTML = '';
+    historyList.innerHTML = '';
 
-  // Show in reverse order (newest first)
-  for (let i = sessionHistory.length - 1; i >= 0; i--) {
-    const item = sessionHistory[i];
-    const isActive = i === currentHistoryIndex;
+    // Show in reverse order (newest first)
+    for (let i = sessionHistory.length - 1; i >= 0; i--) {
+        const item = sessionHistory[i];
+        const isActive = i === currentHistoryIndex;
 
-    const itemEl = document.createElement('div');
-    itemEl.className = `history-item ${isActive ? 'active' : ''}`;
-    itemEl.onclick = () => {
-      currentHistoryIndex = i;
-      const historyItem = sessionHistory[i];
+        const itemEl = document.createElement('div');
+        itemEl.className = `history-item ${isActive ? 'active' : ''}`;
+        itemEl.onclick = () => {
+            currentHistoryIndex = i;
+            const historyItem = sessionHistory[i];
 
-      if (eventSource) {
-        eventSource.close();
-        eventSource = null;
-      }
+            if (eventSource) {
+                eventSource.close();
+                eventSource = null;
+            }
 
-      closeHistoryPanel();
-      showResults(historyItem.session, historyItem.originalText);
-      updateHistoryUI();
-      resultsSection.scrollIntoView({ behavior: 'smooth' });
-    };
+            closeHistoryPanel();
+            showResults(historyItem.session, historyItem.originalText);
+            updateHistoryUI();
+            resultsSection.scrollIntoView({behavior: 'smooth'});
+        };
 
-    const text =
-      item.originalText.length > 50
-        ? item.originalText.substring(0, 50) + '...'
-        : item.originalText;
+        const text =
+            item.originalText.length > 50
+                ? item.originalText.substring(0, 50) + '...'
+                : item.originalText;
 
-    const date = new Date(item.timestamp);
-    const timeStr = date.toLocaleTimeString();
-    const dateStr = date.toLocaleDateString();
+        const date = new Date(item.timestamp);
+        const timeStr = date.toLocaleTimeString();
+        const dateStr = date.toLocaleDateString();
 
-    itemEl.innerHTML = `
+        itemEl.innerHTML = `
       <div class="history-item-text">
         <div>${text}</div>
         <div class="history-item-meta">${item.session.jobs.length} language(s) · ${dateStr}</div>
@@ -156,8 +156,8 @@ function renderHistoryList() {
       <div class="history-item-time">${timeStr}</div>
     `;
 
-    historyList.appendChild(itemEl);
-  }
+        historyList.appendChild(itemEl);
+    }
 }
 
 // Initialize history on load
@@ -181,152 +181,152 @@ prevBtn.addEventListener('click', () => navigateHistory(-1));
 nextBtn.addEventListener('click', () => navigateHistory(1));
 
 historyToggle.addEventListener('click', () => {
-  const isVisible = historyPanel.style.display !== 'none';
-  historyPanel.style.display = isVisible ? 'none' : 'block';
-  historyToggle.textContent = isVisible ? '📋 History' : '✖ Close History';
+    const isVisible = historyPanel.style.display !== 'none';
+    historyPanel.style.display = isVisible ? 'none' : 'block';
+    historyToggle.textContent = isVisible ? '📋 History' : '✖ Close History';
 });
 
 // Form submission handler
 form.addEventListener('submit', async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  // Clear previous errors
-  hideError();
+    // Clear previous errors
+    hideError();
 
-  // Get form data
-  const formData = new FormData(form);
-  const text = formData.get('text').trim();
-  const targetLanguages = formData.getAll('targetLanguages');
+    // Get form data
+    const formData = new FormData(form);
+    const text = formData.get('text').trim();
+    const targetLanguages = formData.getAll('targetLanguages');
 
-  // Validate
-  if (!text) {
-    showError('Please enter some text to translate');
-    return;
-  }
-
-  if (targetLanguages.length === 0) {
-    showError('Please select at least one target language');
-    return;
-  }
-
-  if (targetLanguages.length > 3) {
-    showError('Maximum 3 target languages allowed');
-    return;
-  }
-
-  // Disable form
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Submitting...';
-
-  // Close history panel if open
-  closeHistoryPanel();
-
-  try {
-    // Submit translation request
-    const response = await fetch('/api/translate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        text,
-        targetLanguages,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(
-        errorData.error || 'Failed to submit translation request',
-      );
+    // Validate
+    if (!text) {
+        showError('Please enter some text to translate');
+        return;
     }
 
-    const data = await response.json();
-    currentSession = data;
+    if (targetLanguages.length === 0) {
+        showError('Please select at least one target language');
+        return;
+    }
 
-    // Add to history
-    addToHistory(data, text);
+    if (targetLanguages.length > 3) {
+        showError('Maximum 3 target languages allowed');
+        return;
+    }
 
-    // Show results section (live)
-    showResults(data, text, true);
+    // Disable form
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
 
-    // Connect to SSE
-    connectToSSE(data.sessionId);
-  } catch (error) {
-    showError(error.message);
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Translate';
-  }
+    // Close history panel if open
+    closeHistoryPanel();
+
+    try {
+        // Submit translation request
+        const response = await fetch('/api/translate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                text,
+                targetLanguages,
+            }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(
+                errorData.error || 'Failed to submit translation request',
+            );
+        }
+
+        const data = await response.json();
+        currentSession = data;
+
+        // Add to history
+        addToHistory(data, text);
+
+        // Show results section (live)
+        showResults(data, text, true);
+
+        // Connect to SSE
+        connectToSSE(data.sessionId);
+    } catch (error) {
+        showError(error.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Translate';
+    }
 });
 
 // Show error message
 function showError(message) {
-  errorDiv.textContent = message;
-  errorDiv.style.display = 'block';
+    errorDiv.textContent = message;
+    errorDiv.style.display = 'block';
 }
 
 // Hide error message
 function hideError() {
-  errorDiv.style.display = 'none';
-  errorDiv.textContent = '';
+    errorDiv.style.display = 'none';
+    errorDiv.textContent = '';
 }
 
 // Show results section
 function showResults(session, originalText, isLive = false) {
-  // Show session info
-  sessionInfo.innerHTML = `
+    // Show session info
+    sessionInfo.innerHTML = `
         <div><strong>Session ID:</strong> ${session.sessionId}</div>
         <div><strong>Original text:</strong> ${originalText}</div>
         <div><strong>Target languages:</strong> ${session.jobs.length}</div>
     `;
 
-  // Add/remove live indicator
-  if (isLive) {
-    sessionInfo.classList.add('live');
-  } else {
-    sessionInfo.classList.remove('live');
-  }
+    // Add/remove live indicator
+    if (isLive) {
+        sessionInfo.classList.add('live');
+    } else {
+        sessionInfo.classList.remove('live');
+    }
 
-  // Create result cards
-  resultsGrid.innerHTML = '';
-  for (const job of session.jobs) {
-    // Determine status and content from job if available
-    const status = job.status || 'queued';
-    const content = job.translatedText || job.error || null;
-    const card = createResultCard(job.targetLanguage, status, content);
-    resultsGrid.appendChild(card);
-  }
+    // Create result cards
+    resultsGrid.innerHTML = '';
+    for (const job of session.jobs) {
+        // Determine status and content from job if available
+        const status = job.status || 'queued';
+        const content = job.translatedText || job.error || null;
+        const card = createResultCard(job.targetLanguage, status, content);
+        resultsGrid.appendChild(card);
+    }
 
-  // Show results section
-  resultsSection.style.display = 'block';
+    // Show results section
+    resultsSection.style.display = 'block';
 
-  // Scroll to results
-  resultsSection.scrollIntoView({ behavior: 'smooth' });
+    // Scroll to results
+    resultsSection.scrollIntoView({behavior: 'smooth'});
 }
 
 // Create result card
 function createResultCard(language, status, content = null) {
-  const card = document.createElement('div');
-  card.className = `result-card ${status}`;
-  card.id = `result-${language}`;
+    const card = document.createElement('div');
+    card.className = `result-card ${status}`;
+    card.id = `result-${language}`;
 
-  const statusHtml =
-    status === 'processing'
-      ? `<span class="status-badge status-${status}"><span class="spinner"></span> ${status}</span>`
-      : `<span class="status-badge status-${status}">${status}</span>`;
+    const statusHtml =
+        status === 'processing'
+            ? `<span class="status-badge status-${status}"><span class="spinner"></span> ${status}</span>`
+            : `<span class="status-badge status-${status}">${status}</span>`;
 
-  let contentHtml = '';
-  if (status === 'queued') {
-    contentHtml = '<p class="result-content">Waiting in queue...</p>';
-  } else if (status === 'processing') {
-    contentHtml = '<p class="result-content">Translating...</p>';
-  } else if (status === 'completed' && content) {
-    contentHtml = `<p class="result-content">${content}</p>`;
-  } else if (status === 'error' && content) {
-    contentHtml = `<p class="result-content error-content">Error: ${content}</p>`;
-  }
+    let contentHtml = '';
+    if (status === 'queued') {
+        contentHtml = '<p class="result-content">Waiting in queue...</p>';
+    } else if (status === 'processing') {
+        contentHtml = '<p class="result-content">Translating...</p>';
+    } else if (status === 'completed' && content) {
+        contentHtml = `<p class="result-content">${content}</p>`;
+    } else if (status === 'error' && content) {
+        contentHtml = `<p class="result-content error-content">Error: ${content}</p>`;
+    }
 
-  card.innerHTML = `
+    card.innerHTML = `
         <div class="result-header">
             <div class="language-name">${LANGUAGE_NAMES[language] || language}</div>
             ${statusHtml}
@@ -336,106 +336,106 @@ function createResultCard(language, status, content = null) {
         </div>
     `;
 
-  return card;
+    return card;
 }
 
 // Update result card
 function updateResultCard(language, status, content = null) {
-  const existingCard = document.getElementById(`result-${language}`);
-  if (existingCard) {
-    existingCard.replaceWith(createResultCard(language, status, content));
-  }
+    const existingCard = document.getElementById(`result-${language}`);
+    if (existingCard) {
+        existingCard.replaceWith(createResultCard(language, status, content));
+    }
 }
 
 // Connect to SSE
 function connectToSSE(sessionId) {
-  // Close existing connection
-  if (eventSource) {
-    eventSource.close();
-  }
-
-  // Create new EventSource
-  eventSource = new EventSource(`/api/translate/${sessionId}/events`);
-
-  eventSource.addEventListener('translation_complete', (event) => {
-    const result = JSON.parse(event.data);
-    console.log('Translation complete:', result);
-    updateResultCard(result.targetLanguage, 'completed', result.translatedText);
-
-    // Update history with completed translation
-    const historyItem = getCurrentHistoryItem();
-    if (historyItem) {
-      const job = historyItem.session.jobs.find(
-        (j) => j.targetLanguage === result.targetLanguage,
-      );
-      if (job) {
-        job.status = 'completed';
-        job.translatedText = result.translatedText;
-        saveHistory();
-      }
-    }
-  });
-
-  eventSource.addEventListener('translation_error', (event) => {
-    const result = JSON.parse(event.data);
-    console.error('Translation error:', result);
-    updateResultCard(result.targetLanguage, 'error', result.error);
-
-    // Update history with error
-    const historyItem = getCurrentHistoryItem();
-    if (historyItem) {
-      const job = historyItem.session.jobs.find(
-        (j) => j.targetLanguage === result.targetLanguage,
-      );
-      if (job) {
-        job.status = 'error';
-        job.error = result.error;
-        saveHistory();
-      }
-    }
-  });
-
-  eventSource.addEventListener('session_complete', (event) => {
-    const result = JSON.parse(event.data);
-    console.log('Session complete:', result);
-
-    // Close SSE connection
+    // Close existing connection
     if (eventSource) {
-      eventSource.close();
-      eventSource = null;
+        eventSource.close();
     }
 
-    // Re-enable form
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Translate';
-  });
+    // Create new EventSource
+    eventSource = new EventSource(`/api/translate/${sessionId}/events`);
 
-  eventSource.addEventListener('error', (error) => {
-    console.error('SSE error:', error);
+    eventSource.addEventListener('translation_complete', (event) => {
+        const result = JSON.parse(event.data);
+        console.log('Translation complete:', result);
+        updateResultCard(result.targetLanguage, 'completed', result.translatedText);
 
-    if (eventSource.readyState === EventSource.CLOSED) {
-      console.log('SSE connection closed');
-    }
-  });
-
-  // Auto-update status to processing when connection is established
-  // (slight delay to show queued state first)
-  setTimeout(() => {
-    if (currentSession && currentSession.jobs) {
-      for (const job of currentSession.jobs) {
-        // Only update if still queued
-        const card = document.getElementById(`result-${job.targetLanguage}`);
-        if (card && card.textContent.includes('Waiting in queue')) {
-          updateResultCard(job.targetLanguage, 'processing');
+        // Update history with completed translation
+        const historyItem = getCurrentHistoryItem();
+        if (historyItem) {
+            const job = historyItem.session.jobs.find(
+                (j) => j.targetLanguage === result.targetLanguage,
+            );
+            if (job) {
+                job.status = 'completed';
+                job.translatedText = result.translatedText;
+                saveHistory();
+            }
         }
-      }
-    }
-  }, 1000);
+    });
+
+    eventSource.addEventListener('translation_error', (event) => {
+        const result = JSON.parse(event.data);
+        console.error('Translation error:', result);
+        updateResultCard(result.targetLanguage, 'error', result.error);
+
+        // Update history with error
+        const historyItem = getCurrentHistoryItem();
+        if (historyItem) {
+            const job = historyItem.session.jobs.find(
+                (j) => j.targetLanguage === result.targetLanguage,
+            );
+            if (job) {
+                job.status = 'error';
+                job.error = result.error;
+                saveHistory();
+            }
+        }
+    });
+
+    eventSource.addEventListener('session_complete', (event) => {
+        const result = JSON.parse(event.data);
+        console.log('Session complete:', result);
+
+        // Close SSE connection
+        if (eventSource) {
+            eventSource.close();
+            eventSource = null;
+        }
+
+        // Re-enable form
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Translate';
+    });
+
+    eventSource.addEventListener('error', (error) => {
+        console.error('SSE error:', error);
+
+        if (eventSource.readyState === EventSource.CLOSED) {
+            console.log('SSE connection closed');
+        }
+    });
+
+    // Auto-update status to processing when connection is established
+    // (slight delay to show queued state first)
+    setTimeout(() => {
+        if (currentSession && currentSession.jobs) {
+            for (const job of currentSession.jobs) {
+                // Only update if still queued
+                const card = document.getElementById(`result-${job.targetLanguage}`);
+                if (card && card.textContent.includes('Waiting in queue')) {
+                    updateResultCard(job.targetLanguage, 'processing');
+                }
+            }
+        }
+    }, 1000);
 }
 
 // Cleanup on page unload
 window.addEventListener('beforeunload', () => {
-  if (eventSource) {
-    eventSource.close();
-  }
+    if (eventSource) {
+        eventSource.close();
+    }
 });

@@ -1,6 +1,7 @@
 # Translation Queue — OpenTelemetry Demo Application
 
-An async translation service demonstrating distributed system patterns, designed for incremental OpenTelemetry instrumentation exercises.
+An async translation service demonstrating distributed system patterns, designed for incremental OpenTelemetry
+instrumentation exercises.
 
 ## Architecture
 
@@ -14,7 +15,8 @@ An async translation service demonstrating distributed system patterns, designed
 
 1. User submits text + target languages → Frontend creates session
 2. Frontend enqueues jobs to Redis list (`LPUSH`)
-3. Worker pulls jobs (`BRPOP`), translates with [Argos Translate](https://github.com/argosopentech/argos-translate) (2-5s latency)
+3. Worker pulls jobs (`BRPOP`), translates with [Argos Translate](https://github.com/argosopentech/argos-translate) (
+   2-5s latency)
 4. Worker publishes results to Redis Pub/Sub
 5. Frontend streams updates to browser via Server-Sent Events (SSE)
 
@@ -47,7 +49,7 @@ See [DEVELOPMENT.md](DEVELOPMENT.md) for hot-reload details.
 ## Supported Languages
 
 | Language | Code |
-| -------- | ---- |
+|----------|------|
 | Spanish  | `es` |
 | French   | `fr` |
 | German   | `de` |
@@ -113,7 +115,7 @@ Get session state.
 ## Technology Choices
 
 | Choice                     | Rationale                                                       |
-| -------------------------- | --------------------------------------------------------------- |
+|----------------------------|-----------------------------------------------------------------|
 | **Raw Redis** (not BullMQ) | Cross-language, more instrumentation points, fewer dependencies |
 | **Argos Translate**        | Offline/local, zero cost, realistic processing time             |
 | **SSE** (not WebSockets)   | Simpler to instrument, native browser support                   |
@@ -137,7 +139,7 @@ cd worker && pytest
 ## Environment Variables
 
 | Variable     | Default     | Description        |
-| ------------ | ----------- | ------------------ |
+|--------------|-------------|--------------------|
 | `REDIS_HOST` | `localhost` | Redis server host  |
 | `REDIS_PORT` | `6379`      | Redis server port  |
 | `PORT`       | `3001`      | Frontend HTTP port |
