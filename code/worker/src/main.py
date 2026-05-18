@@ -1,18 +1,20 @@
+import logging
+import random
 import signal
 import sys
-import logging
 import time
-import random
 from datetime import datetime, timezone
+from typing import Optional
+
 from opentelemetry import trace, propagate
 from opentelemetry.trace import SpanKind, StatusCode
-from typing import Optional
+
 from .config import Config
-from .logger import setup_logging
 from .consumer_queue import ConsumerQueue
-from .translator import Translator
 from .instrumentation import setup_instrumentation
+from .logger import setup_logging
 from .metrics import jobs_total, translation_duration, active_jobs
+from .translator import Translator
 
 logger = logging.getLogger(__name__)
 tracer = trace.get_tracer(__name__)
@@ -49,7 +51,10 @@ def main() -> None:
     setup_instrumentation()
 
     logger.info("Starting translation worker")
-    logger.info("Redis connection config", extra={"redis_host": config.redis_host, "redis_port": config.redis_port})
+    logger.info(
+        "Redis connection config",
+        extra={"redis_host": config.redis_host, "redis_port": config.redis_port},
+    )
     logger.info("Supported languages", extra={"languages": config.supported_languages})
 
     # Initialize components
@@ -118,7 +123,10 @@ def main() -> None:
                     if target_lang not in config.supported_languages:
                         error_msg = f"Unsupported target language: {target_lang}"
                         span.set_status(trace.Status(StatusCode.ERROR, error_msg))
-                        logger.error("Unsupported target language", extra={"target_language": target_lang})
+                        logger.error(
+                            "Unsupported target language",
+                            extra={"target_language": target_lang},
+                        )
 
                         result = {
                             "jobId": job_id,
@@ -152,13 +160,20 @@ def main() -> None:
                     # Translate
                     logger.info(
                         "Processing translation job",
-                        extra={"job_id": job_id, "source_language": source_lang, "target_language": target_lang},
+                        extra={
+                            "job_id": job_id,
+                            "source_language": source_lang,
+                            "target_language": target_lang,
+                        },
                     )
 
                     try:
                         # Simulate realistic API latency (0.5-2 seconds)
                         delay = random.uniform(0.5, 2.0)
-                        logger.debug("Simulating translation latency", extra={"delay_seconds": round(delay, 2)})
+                        logger.debug(
+                            "Simulating translation latency",
+                            extra={"delay_seconds": round(delay, 2)},
+                        )
                         time.sleep(delay)
 
                         # Ensure text is not None (already validated above)
@@ -233,7 +248,9 @@ def main() -> None:
                 logger.info("Received keyboard interrupt")
                 break
             except Exception as e:
-                logger.error("Error processing job", extra={"error": str(e)}, exc_info=True)
+                logger.error(
+                    "Error processing job", extra={"error": str(e)}, exc_info=True
+                )
                 # Continue processing next job
                 time.sleep(1)
 

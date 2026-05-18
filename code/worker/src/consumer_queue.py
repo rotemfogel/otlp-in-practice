@@ -1,7 +1,8 @@
-import redis
 import json
 import logging
 from typing import Optional, Dict, Any
+
+import redis
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +43,9 @@ class ConsumerQueue:
             self.client.ping()
             self.publisher.ping()
 
-            logger.info("Connected to Redis", extra={"host": self.host, "port": self.port})
+            logger.info(
+                "Connected to Redis", extra={"host": self.host, "port": self.port}
+            )
         except redis.RedisError as e:
             logger.error("Failed to connect to Redis", extra={"error": str(e)})
             raise
@@ -71,7 +74,10 @@ class ConsumerQueue:
 
             logger.info(
                 "Received job",
-                extra={"job_id": job.get("jobId"), "target_language": job.get("targetLanguage")},
+                extra={
+                    "job_id": job.get("jobId"),
+                    "target_language": job.get("targetLanguage"),
+                },
             )
             return job
 

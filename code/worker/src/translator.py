@@ -1,6 +1,7 @@
+import logging
+
 import argostranslate.package
 import argostranslate.translate
-import logging
 from opentelemetry import trace
 from opentelemetry.trace import StatusCode
 
@@ -19,11 +20,17 @@ class Translator:
 
             # Get installed packages
             installed_packages = argostranslate.package.get_installed_packages()
-            logger.info("Installed translation packages", extra={"count": len(installed_packages)})
+            logger.info(
+                "Installed translation packages",
+                extra={"count": len(installed_packages)},
+            )
 
             # Log available language pairs
             for pkg in installed_packages:
-                logger.info("Available translation package", extra={"from_code": pkg.from_code, "to_code": pkg.to_code})
+                logger.info(
+                    "Available translation package",
+                    extra={"from_code": pkg.from_code, "to_code": pkg.to_code},
+                )
 
         except Exception as e:
             logger.error("Failed to initialize translator", extra={"error": str(e)})
@@ -65,7 +72,10 @@ class Translator:
                     error_msg = (
                         f"Translation model not available for {source} -> {target}"
                     )
-                    logger.error("Translation model not available", extra={"source_language": source, "target_language": target})
+                    logger.error(
+                        "Translation model not available",
+                        extra={"source_language": source, "target_language": target},
+                    )
                     span.set_status(trace.Status(StatusCode.ERROR, error_msg))
                     raise ValueError(error_msg)
 
@@ -77,7 +87,12 @@ class Translator:
 
                 logger.info(
                     "Text translated successfully",
-                    extra={"source_language": source, "target_language": target, "input_length": len(text), "output_length": len(translated_text)},
+                    extra={
+                        "source_language": source,
+                        "target_language": target,
+                        "input_length": len(text),
+                        "output_length": len(translated_text),
+                    },
                 )
 
                 return translated_text
@@ -88,5 +103,12 @@ class Translator:
                 error_msg = f"Translation failed ({source} -> {target}): {str(e)}"
                 span.record_exception(e)
                 span.set_status(trace.Status(StatusCode.ERROR, str(e)))
-                logger.error("Translation failed", extra={"source_language": source, "target_language": target, "error": str(e)})
+                logger.error(
+                    "Translation failed",
+                    extra={
+                        "source_language": source,
+                        "target_language": target,
+                        "error": str(e),
+                    },
+                )
                 raise RuntimeError(error_msg) from e

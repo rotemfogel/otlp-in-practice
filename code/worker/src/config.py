@@ -20,7 +20,9 @@ class Config:
         """Create configuration from environment variables."""
 
         supported_languages_raw = os.getenv("SUPPORTED_LANGUAGES", "es,fr,de")
-        supported_languages = [l.strip() for l in supported_languages_raw.split(",") if l.strip()]
+        supported_languages = [
+            l.strip() for l in supported_languages_raw.split(",") if l.strip()
+        ]
 
         return cls(
             redis_host=os.getenv("REDIS_HOST", "localhost"),
