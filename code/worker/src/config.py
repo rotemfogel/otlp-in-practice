@@ -14,6 +14,7 @@ class Config:
     source_language: str
     supported_languages: List[str]
     log_level: str
+    simulate_latency: bool
 
     @classmethod
     def from_env(cls) -> "Config":
@@ -32,4 +33,5 @@ class Config:
             source_language=os.getenv("SOURCE_LANGUAGE", "en"),
             supported_languages=supported_languages,
             log_level=os.getenv("LOG_LEVEL", "info").upper(),
+            simulate_latency=os.getenv("SIMULATE_LATENCY", "False").lower() == "true",
         )

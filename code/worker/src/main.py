@@ -59,7 +59,6 @@ def main() -> None:
 
     # Initialize components
     queue_consumer: Optional[ConsumerQueue] = None
-    translator: Optional[Translator] = None
 
     try:
         # Connect to Redis
@@ -169,12 +168,13 @@ def main() -> None:
 
                     try:
                         # Simulate realistic API latency (0.5-2 seconds)
-                        delay = random.uniform(0.5, 2.0)
-                        logger.debug(
-                            "Simulating translation latency",
-                            extra={"delay_seconds": round(delay, 2)},
-                        )
-                        time.sleep(delay)
+                        if config.simulate_latency:
+                            delay = random.uniform(0.5, 2.0)
+                            logger.debug(
+                                "Simulating translation latency",
+                                extra={"delay_seconds": round(delay, 2)},
+                            )
+                            time.sleep(delay)
 
                         # Ensure text is not None (already validated above)
                         assert text is not None, "Text should not be None"

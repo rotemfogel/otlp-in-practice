@@ -32,6 +32,7 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - LOG_LEVEL=debug
+      - SIMULATE_LATENCY=False
     command: watchmedo auto-restart --directory=./src --pattern="*.py" --recursive -- python -m src.main
 
 volumes:
