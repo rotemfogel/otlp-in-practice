@@ -1,1 +1,3 @@
 .idea/
+/k8s/observability/configs/grafana-admin-credentials.env
+/k8s-rendered.yaml

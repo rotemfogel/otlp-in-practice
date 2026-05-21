@@ -16,7 +16,7 @@ ingester:
 
 schema_config:
   configs:
-    - from: 2024-01-01
+    - from: 2026-01-01
       store: tsdb
       object_store: filesystem
       schema: v13
@@ -32,7 +32,7 @@ storage_config:
     directory: /loki/chunks
 
 limits_config:
-  retention_period: 168h
+  retention_period: 72h
 
 compactor:
   working_directory: /loki/compactor

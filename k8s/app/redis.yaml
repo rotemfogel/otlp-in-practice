@@ -52,7 +52,7 @@ spec:
     spec:
       containers:
         - name: redis-exporter
-          image: oliver006/redis_exporter:v1.81.0-alpine
+          image: oliver006/redis_exporter:alpine
           env:
             - name: REDIS_ADDR
               value: redis://redis:6379

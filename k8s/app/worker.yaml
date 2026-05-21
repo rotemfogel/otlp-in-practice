@@ -24,7 +24,7 @@ spec:
               memory: 2Gi
           env:
             - name: REDIS_HOST
-              value: redis
+              value: redis.app.svc.cluster.local
             - name: REDIS_PORT
               value: '6379'
             - name: LOG_LEVEL

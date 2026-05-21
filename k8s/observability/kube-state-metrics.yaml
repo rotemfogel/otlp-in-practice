@@ -8,15 +8,15 @@ kind: ClusterRole
 metadata:
   name: list-watch-resources
 rules:
-  - apiGroups: ['']
-    resources: [nodes, pods, services, namespaces, replicationcontrollers]
-    verbs: [list, watch]
-  - apiGroups: [apps]
-    resources: [deployments, replicasets, statefulsets, daemonsets]
-    verbs: [list, watch]
-  - apiGroups: [batch]
-    resources: [jobs, cronjobs]
-    verbs: [list, watch]
+  - apiGroups: [ '' ]
+    resources: [ nodes, pods, services, namespaces, replicationcontrollers ]
+    verbs: [ list, watch ]
+  - apiGroups: [ apps ]
+    resources: [ deployments, replicasets, statefulsets, daemonsets ]
+    verbs: [ list, watch ]
+  - apiGroups: [ batch ]
+    resources: [ jobs, cronjobs ]
+    verbs: [ list, watch ]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding

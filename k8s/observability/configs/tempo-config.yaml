@@ -21,6 +21,7 @@ storage:
 query_frontend:
   search:
     max_duration: 0s
+
 ingester:
   max_block_duration: 5m
 
